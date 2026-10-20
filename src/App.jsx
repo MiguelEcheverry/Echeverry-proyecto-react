@@ -15,7 +15,7 @@ import AuthModal from './components/AuthModal'
 import './App.css'
 
 function App() {
-  const [activeSection, setActiveSection] = useState('inicio')
+  const [activeTab, setActiveTab] = useState('inicio')
   const [selectedSpecialty, setSelectedSpecialty] = useState('')
   const [chatModalOpen, setChatModalOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
@@ -38,26 +38,11 @@ function App() {
     }
   }, [cart])
 
-  // Detección de sección activa mediante IntersectionObserver
-  useEffect(() => {
-    const sections = document.querySelectorAll('section[id], main[id]')
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
-      },
-      {
-        rootMargin: '-30% 0px -60% 0px',
-        threshold: 0,
-      }
-    )
-
-    sections.forEach((sec) => observer.observe(sec))
-    return () => observer.disconnect()
-  }, [])
+  // Desplazamiento automático arriba al cambiar de pestaña
+  const handleSelectTab = (tabId) => {
+    setActiveTab(tabId)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   // Operaciones del Carrito
   const handleAddToCart = (product) => {
@@ -116,70 +101,96 @@ function App() {
     setCart([])
   }
 
-  const scrollToPharmacy = () => {
-    const target = document.querySelector('#farmacia')
-    if (target) target.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const scrollToPayments = () => {
-    const target = document.querySelector('#pagos')
-    if (target) target.scrollIntoView({ behavior: 'smooth' })
+  const handleSelectSpecialtyAndNavigate = (specTitle) => {
+    setSelectedSpecialty(specTitle)
+    handleSelectTab('consultas')
   }
 
   const totalCartCount = cart.reduce((sum, item) => sum + item.qty, 0)
 
+  // Renderizado condicional de la pestaña activa (One Tab at a time)
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'inicio':
+        return (
+          <HeroSection
+            onNavigateConsultas={() => handleSelectTab('consultas')}
+          />
+        )
+      case 'nosotros':
+        return <AboutSection />
+      case 'especialidades':
+        return (
+          <SpecialtiesSection
+            onSelectSpecialty={handleSelectSpecialtyAndNavigate}
+          />
+        )
+      case 'servicios':
+        return (
+          <ServicesSection
+            onOpenChatIA={() => setChatModalOpen(true)}
+            onNavigateConsultas={() => handleSelectTab('consultas')}
+          />
+        )
+      case 'consultas':
+        return (
+          <ConsultasSection
+            selectedSpecialty={selectedSpecialty}
+          />
+        )
+      case 'blog':
+        return <BlogSection />
+      case 'farmacia':
+        return (
+          <PharmacySection
+            cart={cart}
+            onAddToCart={handleAddToCart}
+            onRemoveFromCart={handleRemoveFromCart}
+            onOpenCart={() => handleSelectTab('pagos')}
+          />
+        )
+      case 'pagos':
+        return (
+          <PaymentsSection
+            cart={cart}
+            onUpdateQty={handleUpdateQty}
+            onRemoveItem={handleRemoveCartItem}
+            onClearCart={handleClearCart}
+            onGoToPharmacy={() => handleSelectTab('farmacia')}
+          />
+        )
+      default:
+        return (
+          <HeroSection
+            onNavigateConsultas={() => handleSelectTab('consultas')}
+          />
+        )
+    }
+  }
+
   return (
     <div className="app-container">
-      {/* 1. Header con barra gris y navegación fluida */}
+      {/* 1. Header con barra gris y navegación por pestañas individuales */}
       <Header
-        activeSection={activeSection}
+        activeTab={activeTab}
+        onSelectTab={handleSelectTab}
         cartCount={totalCartCount}
-        onOpenCart={scrollToPayments}
+        onOpenCart={() => handleSelectTab('pagos')}
         onOpenAuth={() => setAuthModalOpen(true)}
       />
 
-      {/* 2. Hero Section (Inicio) */}
-      <HeroSection />
+      {/* 2. Contenedor principal de la pestaña seleccionada (Vista única no lineal) */}
+      <main className="tab-content-wrapper" key={activeTab}>
+        {renderActiveTab()}
+      </main>
 
-      {/* 3. About Section (Nosotros) */}
-      <AboutSection />
-
-      {/* 4. Specialties Section (Especialidades) */}
-      <SpecialtiesSection onSelectSpecialty={(spec) => setSelectedSpecialty(spec)} />
-
-      {/* 5. Services Section (Servicios) */}
-      <ServicesSection onOpenChatIA={() => setChatModalOpen(true)} />
-
-      {/* 6. Consultas Section (Formulario & Términos) */}
-      <ConsultasSection selectedSpecialty={selectedSpecialty} />
-
-      {/* 7. Blog Section (Artículos de Salud) */}
-      <BlogSection />
-
-      {/* 8. Pharmacy Section (Catálogo, Buscador, Autocompletado) */}
-      <PharmacySection
-        cart={cart}
-        onAddToCart={handleAddToCart}
-        onRemoveFromCart={handleRemoveFromCart}
-        onOpenCart={scrollToPayments}
-      />
-
-      {/* 9. Payments & Cart Section (Checkout & Pagos) */}
-      <PaymentsSection
-        cart={cart}
-        onUpdateQty={handleUpdateQty}
-        onRemoveItem={handleRemoveCartItem}
-        onClearCart={handleClearCart}
-        onGoToPharmacy={scrollToPharmacy}
-      />
-
-      {/* 10. Footer (Contacto) */}
+      {/* 3. Footer de contacto global */}
       <Footer />
 
-      {/* 11. Botón Flotante IA */}
+      {/* 4. Botón Flotante Asistente IA */}
       <FloatingIA onClick={() => setChatModalOpen(true)} />
 
-      {/* Modales Interactivos */}
+      {/* Modales Interactivos del Sistema */}
       <ChatMedicoModal
         isOpen={chatModalOpen}
         onClose={() => setChatModalOpen(false)}

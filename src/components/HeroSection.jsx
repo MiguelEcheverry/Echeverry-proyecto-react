@@ -1,11 +1,10 @@
 import logoBlanco from '../assets/medlife/img/inicio/logo_blanco.png'
 
-export default function HeroSection() {
+export default function HeroSection({ onNavigateConsultas }) {
   const handleConsultaClick = (e) => {
     e.preventDefault()
-    const target = document.querySelector('#consultas')
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
+    if (onNavigateConsultas) {
+      onNavigateConsultas()
     }
   }
 

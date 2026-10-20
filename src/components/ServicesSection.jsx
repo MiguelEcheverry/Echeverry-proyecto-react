@@ -1,9 +1,8 @@
-export default function ServicesSection({ onOpenChatIA }) {
+export default function ServicesSection({ onOpenChatIA, onNavigateConsultas }) {
   const handleConsultaClick = (e) => {
     e.preventDefault()
-    const target = document.querySelector('#consultas')
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
+    if (onNavigateConsultas) {
+      onNavigateConsultas()
     }
   }
 
@@ -11,9 +10,6 @@ export default function ServicesSection({ onOpenChatIA }) {
     e.preventDefault()
     if (onOpenChatIA) {
       onOpenChatIA()
-    } else {
-      const target = document.querySelector('#consultas')
-      if (target) target.scrollIntoView({ behavior: 'smooth' })
     }
   }
 

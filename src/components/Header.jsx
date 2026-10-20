@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react'
 import logoImg from '../assets/medlife/img/inicio/logo.png'
 
 export default function Header({
-  activeSection = 'inicio',
+  activeTab = 'inicio',
+  activeSection,
+  onSelectTab,
   cartCount = 0,
   onOpenCart,
   onOpenAuth,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+
+  const currentActive = activeTab || activeSection || 'inicio'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,29 +23,33 @@ export default function Header({
   }, [])
 
   const navLinks = [
-    { id: 'inicio', label: 'INICIO', href: '#inicio' },
-    { id: 'nosotros', label: 'NOSOTROS', href: '#nosotros' },
-    { id: 'especialidades', label: 'ESPECIALIDADES', href: '#especialidades' },
-    { id: 'servicios', label: 'SERVICIOS', href: '#servicios' },
-    { id: 'consultas', label: 'CONSULTAS', href: '#consultas' },
-    { id: 'blog', label: 'BLOG', href: '#blog' },
-    { id: 'farmacia', label: 'FARMACIA', href: '#farmacia' },
-    { id: 'pagos', label: 'PAGOS', href: '#pagos' },
+    { id: 'inicio', label: 'INICIO' },
+    { id: 'nosotros', label: 'NOSOTROS' },
+    { id: 'especialidades', label: 'ESPECIALIDADES' },
+    { id: 'servicios', label: 'SERVICIOS' },
+    { id: 'consultas', label: 'CONSULTAS' },
+    { id: 'blog', label: 'BLOG' },
+    { id: 'farmacia', label: 'FARMACIA' },
+    { id: 'pagos', label: 'PAGOS' },
   ]
 
-  const handleLinkClick = (e, href) => {
+  const handleLinkClick = (e, tabId) => {
     e.preventDefault()
     setMobileMenuOpen(false)
-    const target = document.querySelector(href)
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
+    if (onSelectTab) {
+      onSelectTab(tabId)
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
     <>
       <header className={`site-header ${scrolled ? 'site-header--scrolled' : ''}`}>
-        <a href="#inicio" className="logo" onClick={(e) => handleLinkClick(e, '#inicio')}>
+        <a
+          href="#inicio"
+          className="logo"
+          onClick={(e) => handleLinkClick(e, 'inicio')}
+        >
           <img src={logoImg} alt="Medlife" className="logo-icon" />
           <div className="logo-text">
             <span className="logo-title">MEDLIFE</span>
@@ -63,9 +71,9 @@ export default function Header({
           {navLinks.map((link) => (
             <a
               key={link.id}
-              href={link.href}
-              className={activeSection === link.id ? 'active' : ''}
-              onClick={(e) => handleLinkClick(e, link.href)}
+              href={`#${link.id}`}
+              className={currentActive === link.id ? 'active' : ''}
+              onClick={(e) => handleLinkClick(e, link.id)}
             >
               {link.label}
             </a>

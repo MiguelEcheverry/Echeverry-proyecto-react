@@ -65,10 +65,11 @@ export default function SpecialtiesSection({ onSelectSpecialty }) {
   const handleStartConsultation = (specialtyTitle) => {
     if (onSelectSpecialty) {
       onSelectSpecialty(specialtyTitle)
-    }
-    const target = document.querySelector('#consultas')
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      const target = document.querySelector('#consultas')
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
 
