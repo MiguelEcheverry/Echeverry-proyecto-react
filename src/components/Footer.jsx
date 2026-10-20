@@ -6,6 +6,7 @@ export default function Footer() {
       <div className="contact-icon">
         <img src={contactIcon} alt="Medlife" className="contact-heart" />
       </div>
+
       <div className="contact-item">
         <svg className="contact-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -15,14 +16,19 @@ export default function Footer() {
             strokeLinejoin="round"
           />
         </svg>
-        <span>+57 322 7048889</span>
+        <a href="tel:+573227048889">+57 322 7048889</a>
       </div>
+
       <div className="contact-item">
         <svg className="contact-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="2.5" y="4.5" width="19" height="15" rx="2" stroke="#1C86C4" strokeWidth="1.6" />
           <path d="M3.5 6L12 13L20.5 6" stroke="#1C86C4" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
-        <span>INFO@MEDILIFEGROUP.COM</span>
+        <a href="mailto:info@medilifegroup.com">INFO@MEDILIFEGROUP.COM</a>
+      </div>
+
+      <div className="footer-copyright">
+        © 2026 Medlife Virtual Healthcare. Todos los derechos reservados.
       </div>
     </footer>
   )

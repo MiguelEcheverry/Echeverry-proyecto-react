@@ -1,4 +1,22 @@
-export default function ServicesSection() {
+export default function ServicesSection({ onOpenChatIA }) {
+  const handleConsultaClick = (e) => {
+    e.preventDefault()
+    const target = document.querySelector('#consultas')
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const handleIAClick = (e) => {
+    e.preventDefault()
+    if (onOpenChatIA) {
+      onOpenChatIA()
+    } else {
+      const target = document.querySelector('#consultas')
+      if (target) target.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <main className="servicios-hero" id="servicios">
       <h1>Elige la forma en la que quieres ser atendido</h1>
@@ -25,7 +43,7 @@ export default function ServicesSection() {
             <rect x="52" y="80" width="16" height="10" fill="#7FCBE0" />
             <rect x="40" y="90" width="40" height="6" rx="2" fill="#7FCBE0" />
           </svg>
-          <a href="#consulta" className="btn-pill">
+          <a href="#consultas" className="btn-pill" onClick={handleConsultaClick}>
             CONSULTA GENERAL /<br />MEDICO EN LINEA
           </a>
         </div>
@@ -48,7 +66,7 @@ export default function ServicesSection() {
             <rect x="72" y="78" width="8" height="8" fill="#B9DDE8" />
             <rect x="52" y="88" width="16" height="12" fill="#4FB8D6" />
           </svg>
-          <a href="#ia" className="btn-pill">
+          <a href="#ia" className="btn-pill" onClick={handleIAClick}>
             ORIENTACIÓN CON<br />AYUDA DE IA
           </a>
         </div>

@@ -1,6 +1,11 @@
-export default function FloatingIA() {
+export default function FloatingIA({ onClick }) {
   return (
-    <a href="#ia" className="ia-float-btn" aria-label="Ir a IA">
+    <button
+      className="ia-float-btn"
+      aria-label="Abrir Asistente IA Medlife"
+      title="Asistente Virtual IA Medlife"
+      onClick={onClick}
+    >
       <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <circle cx="50" cy="50" r="48" fill="#ffffff" />
         <polygon
@@ -27,6 +32,6 @@ export default function FloatingIA() {
           IA
         </text>
       </svg>
-    </a>
+    </button>
   )
 }
